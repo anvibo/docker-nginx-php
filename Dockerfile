@@ -3,7 +3,7 @@ FROM nginx
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update
-RUN apt-get -y install wget php7.0-fpm supervisor php7.0-xml php7.0-mysql php7.0-mbstring php7.0-gd php7.0-ldap php7.0-zip php7.0-imap
+RUN apt-get -y install wget php7.0-fpm supervisor php7.0-xml php7.0-mysql php7.0-mbstring php7.0-gd php7.0-ldap php7.0-zip php7.0-imap php7.0-pgsql
 RUN wget https://github.com/LimeSurvey/LimeSurvey/archive/3.14.7+180827.tar.gz -O /tmp/ls.tar.gz
 RUN mkdir /run/php/
 ADD default.conf /etc/nginx/conf.d/
