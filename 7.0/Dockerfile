@@ -2,7 +2,7 @@ FROM nginx
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install --no-install-recommends -y \
 	php7.0-fpm \
 	supervisor \
 && rm -rf /var/lib/apt/lists/*
