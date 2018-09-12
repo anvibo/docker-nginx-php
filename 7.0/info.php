@@ -1,5 +1,1 @@
-<?php
-
-phpinfo();
-
-?>
+/home/bogdan/code/nginx-php/info.php
