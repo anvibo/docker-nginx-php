@@ -1,3 +1,3 @@
 ## Supported tags and respective Dockerfile links
 
-* [7.0 - (7.0/Dockerfile)](https://github.com/anvibo/docker-nginx-php/7.0/Dockerfile)
+* [7.0 - (7.0/Dockerfile)](https://github.com/anvibo/docker-nginx-php/blob/master/7.0/Dockerfile)
