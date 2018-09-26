@@ -1,4 +1,4 @@
-FROM anvibo/baseimage:14.04-18.2609.3 
+FROM anvibo/baseimage:14.04
 
 ENV DEBIAN_FRONTEND noninteractive
 
