@@ -52,11 +52,11 @@ pipeline {
             }
         }
 
-        stage('Build image 7.0 from master') {
+        stage('Build image 7.2 from master') {
             when { branch 'master' }
             steps {
                 script {
-                    def tag = "7.0"
+                    def tag = "7.2"
                     app = docker.build("anvibo/nginx-php", "-f ${tag}/Dockerfile --pull .")
 
                     withDockerRegistry([url: "", credentialsId: "dockerhub-anvibo"]) {
@@ -67,11 +67,11 @@ pipeline {
             }
         }
 
-        stage('Build image 7.0 from branch') {
+        stage('Build image 7.2 from branch') {
             when { not { branch 'master' } }
             steps {
                 script {
-                  def tag = "7.0"
+                  def tag = "7.2"
                   app = docker.build("anvibo/nginx-php", "-f ${tag}/Dockerfile --pull .")
 
                   withDockerRegistry([url: "", credentialsId: "dockerhub-anvibo"]) {
@@ -82,11 +82,11 @@ pipeline {
             }
         }
 
-         stage('Build image 7.0-mysql from master') {
+         stage('Build image 7.2-mysql from master') {
             when { branch 'master' }
             steps {
                 script {
-                    def tag = "7.0-mysql"
+                    def tag = "7.2-mysql"
                     app = docker.build("anvibo/nginx-php", "-f ${tag}/Dockerfile --pull .")
 
                     withDockerRegistry([url: "", credentialsId: "dockerhub-anvibo"]) {
@@ -97,11 +97,11 @@ pipeline {
             }
         }
 
-        stage('Build image 7.0-mysql from branch') {
+        stage('Build image 7.2-mysql from branch') {
             when { not { branch 'master' } }
             steps {
                 script {
-                  def tag = "7.0-mysql"
+                  def tag = "7.2-mysql"
                   app = docker.build("anvibo/nginx-php", "-f ${tag}/Dockerfile --pull .")
 
                   withDockerRegistry([url: "", credentialsId: "dockerhub-anvibo"]) {
