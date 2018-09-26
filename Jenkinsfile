@@ -23,34 +23,19 @@ pipeline {
             }
         }
 
-        stage('Build image 18.04 from master') {
-            when { branch 'master' }
+        stage('Build image: 5.9-mysql') {
             steps {
                 script {
                     app = docker.build("anvibo/nginx-php", "-f 5.9-mysql/Dockerfile .")
 
                     withDockerRegistry([url: "", credentialsId: "dockerhub-anvibo"]) {
                     app.push("5.9-mysql")
+                    app.push("5.9-mysql-${env.BUILD_NUMBER}")
+                    app.push("5.9-mysql-${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
                     }
                 }
             }
         }
-
-        stage('Build image 18.04 from branch') {
-            when { not { branch 'master' } }
-            steps {
-                script {
-                app = docker.build("anvibo/nginx-php", "-f 5.9-mysql/Dockerfile .")
-
-                withDockerRegistry([url: "", credentialsId: "dockerhub-anvibo"]) {
-                app.push("5.9-mysql-${env.BRANCH_NAME}")
-                app.push("5.9-mysql")
-
-                }
-                }
-            }
-        }
-
     }
 }
   
