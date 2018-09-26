@@ -104,7 +104,7 @@ pipeline {
                 }
             }
 
-            stage('Build image 7.2-mysql from branch') {
+            stage('7.2-mysql') {
             
                 steps {
                     script {
