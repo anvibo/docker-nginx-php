@@ -22,100 +22,103 @@ pipeline {
             }
         }
 
-        stage('Build image 5.9 from master') {
-            when { branch 'master' }
-            steps {
-                script {
-                    def tag = "5.9-mysql"
-                    app = docker.build("anvibo/nginx-php", "-f ${tag}/Dockerfile --pull .")
+	stage('Build images and push to dockerhub - master') {
+		when { branch 'master'}
+		parallel {
+            stage('5.9-mysql') {
+                steps {
+                    script {
+                        def tag = "5.9-mysql"
+                        app = docker.build("anvibo/nginx-php", "-f ${tag}/Dockerfile --pull .")
 
-                    withDockerRegistry([url: "", credentialsId: "dockerhub-anvibo"]) {
-                    app.push("${tag}")
-                    app.push("${tag}-${env.BUILD_NUMBER}")
+                        withDockerRegistry([url: "", credentialsId: "dockerhub-anvibo"]) {
+                        app.push("${tag}")
+                        app.push("${tag}-${env.BUILD_NUMBER}")
+                        }
+                    }
+                }
+            }
+
+            stage('7.2') {
+            
+                steps {
+                    script {
+                        def tag = "7.2"
+                        app = docker.build("anvibo/nginx-php", "-f ${tag}/Dockerfile --pull .")
+
+                        withDockerRegistry([url: "", credentialsId: "dockerhub-anvibo"]) {
+                        app.push("${tag}")
+                        app.push("${tag}-${env.BUILD_NUMBER}")
+                        app.push("latest")
+                        }
+                    }
+                }
+            }
+
+            stage('Build image 7.2-mysql from master') {
+            
+                steps {
+                    script {
+                        def tag = "7.2-mysql"
+                        app = docker.build("anvibo/nginx-php", "-f ${tag}/Dockerfile --pull .")
+
+                        withDockerRegistry([url: "", credentialsId: "dockerhub-anvibo"]) {
+                        app.push("${tag}")
+                        app.push("${tag}-${env.BUILD_NUMBER}")
+                        }
                     }
                 }
             }
         }
+	}
 
-        stage('Build image 5.9 from branch') {
-            when { not { branch 'master' } }
-            steps {
-                script {
-                  def tag = "5.9-mysql"
-                  app = docker.build("anvibo/nginx-php", "-f ${tag}/Dockerfile --pull .")
+    stage('Build images and push to dockerhub - branch') {
+		when { not {branch 'master'} }
+		parallel {
+            stage('5.9-mysql') {
+                steps {
+                    script {
+                        def tag = "5.9-mysql"
+                        app = docker.build("anvibo/nginx-php", "-f ${tag}/Dockerfile --pull .")
 
-                  withDockerRegistry([url: "", credentialsId: "dockerhub-anvibo"]) {
-                  app.push("${tag}-${env.BRANCH_NAME}")
-                  app.push("${tag}-${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
-                  }
-                }
-            }
-        }
-
-        stage('Build image 7.2 from master') {
-            when { branch 'master' }
-            steps {
-                script {
-                    def tag = "7.2"
-                    app = docker.build("anvibo/nginx-php", "-f ${tag}/Dockerfile --pull .")
-
-                    withDockerRegistry([url: "", credentialsId: "dockerhub-anvibo"]) {
-                    app.push("${tag}")
-                    app.push("${tag}-${env.BUILD_NUMBER}")
-                    app.push("latest")
+                        withDockerRegistry([url: "", credentialsId: "dockerhub-anvibo"]) {
+                        app.push("${tag}-${env.BRANCH_NAME}")
+                        app.push("${tag}-${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
+                        }
                     }
                 }
             }
-        }
 
-        stage('Build image 7.2 from branch') {
-            when { not { branch 'master' } }
-            steps {
-                script {
-                  def tag = "7.2"
-                  app = docker.build("anvibo/nginx-php", "-f ${tag}/Dockerfile --pull .")
+            stage('7.2') {
+            
+                steps {
+                    script {
+                        def tag = "7.2"
+                        app = docker.build("anvibo/nginx-php", "-f ${tag}/Dockerfile --pull .")
 
-                  withDockerRegistry([url: "", credentialsId: "dockerhub-anvibo"]) {
-                  app.push("${tag}-${env.BRANCH_NAME}")
-                  app.push("${tag}-${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
-                  }
+                        withDockerRegistry([url: "", credentialsId: "dockerhub-anvibo"]) {
+                        app.push("${tag}-${env.BRANCH_NAME}")
+                        app.push("${tag}-${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
+                        }
+                    }
                 }
             }
-        }
 
-         stage('Build image 7.2-mysql from master') {
-            when { branch 'master' }
-            steps {
-                script {
+            stage('Build image 7.2-mysql from branch') {
+            
+                steps {
+                    script {
                     def tag = "7.2-mysql"
                     app = docker.build("anvibo/nginx-php", "-f ${tag}/Dockerfile --pull .")
 
                     withDockerRegistry([url: "", credentialsId: "dockerhub-anvibo"]) {
-                    app.push("${tag}")
-                    app.push("${tag}-${env.BUILD_NUMBER}")
+                    app.push("${tag}-${env.BRANCH_NAME}")
+                    app.push("${tag}-${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
+                    }
                     }
                 }
             }
         }
-
-        stage('Build image 7.2-mysql from branch') {
-            when { not { branch 'master' } }
-            steps {
-                script {
-                  def tag = "7.2-mysql"
-                  app = docker.build("anvibo/nginx-php", "-f ${tag}/Dockerfile --pull .")
-
-                  withDockerRegistry([url: "", credentialsId: "dockerhub-anvibo"]) {
-                  app.push("${tag}-${env.BRANCH_NAME}")
-                  app.push("${tag}-${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
-                  }
-                }
-            }
-        }
-
-
-
-
-
+	}
       }
 }
