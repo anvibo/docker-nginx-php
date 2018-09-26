@@ -62,6 +62,7 @@ pipeline {
                     withDockerRegistry([url: "", credentialsId: "dockerhub-anvibo"]) {
                     app.push("${tag}")
                     app.push("${tag}-${env.BUILD_NUMBER}")
+                    app.push("latest")
                     }
                 }
             }
