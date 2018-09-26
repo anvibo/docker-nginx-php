@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    / * post {
+    /* post {
       failure {
         updateGitlabCommitStatus name: 'build', state: 'failed'
       }
