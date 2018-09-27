@@ -21,11 +21,10 @@ pipeline {
             checkout scm
             }
         }
-
-	stage('Build - master') {
-		when { branch 'master'}
-        steps {
+		
+        
         stage('5.9-mysql') {
+            when { branch 'master'}
             steps {
                 script {
                     def tag = "5.9-mysql"
@@ -40,7 +39,7 @@ pipeline {
         }
 
         stage('7.2') {
-        
+            when { branch 'master'}
             steps {
                 script {
                     def tag = "7.2"
@@ -56,7 +55,7 @@ pipeline {
         }
 
         stage('7.2-mysql') {
-        
+            when { branch 'master'}
             steps {
                 script {
                     def tag = "7.2-mysql"
@@ -69,13 +68,11 @@ pipeline {
                 }
             }
         }
-	}
-    }
-
-    stage('Build images and push to dockerhub - branch') {
-		when { not {branch 'master'} }
-        steps {
+	
+		
+        
             stage('5.9-mysql') {
+                when { not {branch 'master'} }
                 steps {
                     script {
                         def tag = "5.9-mysql"
@@ -90,7 +87,7 @@ pipeline {
             }
 
             stage('7.2') {
-            
+                when { not {branch 'master'} }
                 steps {
                     script {
                         def tag = "7.2"
@@ -105,7 +102,7 @@ pipeline {
             }
 
             stage('7.2-mysql') {
-            
+                when { not {branch 'master'} }
                 steps {
                     script {
                     def tag = "7.2-mysql"
@@ -120,5 +117,3 @@ pipeline {
             }
         }
 	}
-      }
-}
