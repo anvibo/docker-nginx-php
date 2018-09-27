@@ -29,11 +29,11 @@ pipeline {
                 steps {
                     script {
                         def tag = "5.9-mysql"
-                        app = docker.build("anvibo/nginx-php", "-f ${tag}/Dockerfile --pull .")
+                        app1 = docker.build("anvibo/nginx-php", "-f ${tag}/Dockerfile --pull .")
 
                         withDockerRegistry([url: "", credentialsId: "dockerhub-anvibo"]) {
-                        app.push("${tag}")
-                        app.push("${tag}-${env.BUILD_NUMBER}")
+                        app1.push("${tag}")
+                        app1.push("${tag}-${env.BUILD_NUMBER}")
                         }
                     }
                 }
@@ -44,12 +44,12 @@ pipeline {
                 steps {
                     script {
                         def tag = "7.2"
-                        app = docker.build("anvibo/nginx-php", "-f ${tag}/Dockerfile --pull .")
+                        app2 = docker.build("anvibo/nginx-php", "-f ${tag}/Dockerfile --pull .")
 
                         withDockerRegistry([url: "", credentialsId: "dockerhub-anvibo"]) {
-                        app.push("${tag}")
-                        app.push("${tag}-${env.BUILD_NUMBER}")
-                        app.push("latest")
+                        app2.push("${tag}")
+                        app2.push("${tag}-${env.BUILD_NUMBER}")
+                        app2.push("latest")
                         }
                     }
                 }
@@ -60,11 +60,11 @@ pipeline {
                 steps {
                     script {
                         def tag = "7.2-mysql"
-                        app = docker.build("anvibo/nginx-php", "-f ${tag}/Dockerfile --pull .")
+                        app3 = docker.build("anvibo/nginx-php", "-f ${tag}/Dockerfile --pull .")
 
                         withDockerRegistry([url: "", credentialsId: "dockerhub-anvibo"]) {
-                        app.push("${tag}")
-                        app.push("${tag}-${env.BUILD_NUMBER}")
+                        app3.push("${tag}")
+                        app3.push("${tag}-${env.BUILD_NUMBER}")
                         }
                     }
                 }
@@ -79,11 +79,11 @@ pipeline {
                 steps {
                     script {
                         def tag = "5.9-mysql"
-                        app = docker.build("anvibo/nginx-php", "-f ${tag}/Dockerfile --pull .")
+                        app4 = docker.build("anvibo/nginx-php", "-f ${tag}/Dockerfile --pull .")
 
                         withDockerRegistry([url: "", credentialsId: "dockerhub-anvibo"]) {
-                        app.push("${tag}-${env.BRANCH_NAME}")
-                        app.push("${tag}-${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
+                        app4.push("${tag}-${env.BRANCH_NAME}")
+                        app4.push("${tag}-${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
                         }
                     }
                 }
@@ -94,11 +94,11 @@ pipeline {
                 steps {
                     script {
                         def tag = "7.2"
-                        app = docker.build("anvibo/nginx-php", "-f ${tag}/Dockerfile --pull .")
+                        app5 = docker.build("anvibo/nginx-php", "-f ${tag}/Dockerfile --pull .")
 
                         withDockerRegistry([url: "", credentialsId: "dockerhub-anvibo"]) {
-                        app.push("${tag}-${env.BRANCH_NAME}")
-                        app.push("${tag}-${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
+                        app5.push("${tag}-${env.BRANCH_NAME}")
+                        app5.push("${tag}-${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
                         }
                     }
                 }
@@ -109,11 +109,11 @@ pipeline {
                 steps {
                     script {
                     def tag = "7.2-mysql"
-                    app = docker.build("anvibo/nginx-php", "-f ${tag}/Dockerfile --pull .")
+                    app6 = docker.build("anvibo/nginx-php", "-f ${tag}/Dockerfile --pull .")
 
                     withDockerRegistry([url: "", credentialsId: "dockerhub-anvibo"]) {
-                    app.push("${tag}-${env.BRANCH_NAME}")
-                    app.push("${tag}-${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
+                    app6.push("${tag}-${env.BRANCH_NAME}")
+                    app6.push("${tag}-${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
                     }
                     }
                 }
