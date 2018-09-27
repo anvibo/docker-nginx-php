@@ -24,6 +24,7 @@ pipeline {
 
 	stage('Build - master') {
 		when { branch 'master'}
+        steps {
         stage('5.9-mysql') {
             steps {
                 script {
@@ -69,9 +70,11 @@ pipeline {
             }
         }
 	}
+    }
 
     stage('Build images and push to dockerhub - branch') {
 		when { not {branch 'master'} }
+        steps {
             stage('5.9-mysql') {
                 steps {
                     script {
@@ -115,6 +118,7 @@ pipeline {
                     }
                 }
             }
+        }
 	}
       }
 }
