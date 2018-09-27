@@ -23,7 +23,7 @@ pipeline {
         }
 		
         
-        stage('5.9-mysql') {
+        stage('master - 5.9-mysql') {
             when { branch 'master'}
             steps {
                 script {
@@ -38,7 +38,7 @@ pipeline {
             }
         }
 
-        stage('7.2') {
+        stage('master - 7.2') {
             when { branch 'master'}
             steps {
                 script {
@@ -54,7 +54,7 @@ pipeline {
             }
         }
 
-        stage('7.2-mysql') {
+        stage('master - 7.2-mysql') {
             when { branch 'master'}
             steps {
                 script {
@@ -71,7 +71,7 @@ pipeline {
 	
 		
         
-            stage('5.9-mysql') {
+            stage('branch - 5.9-mysql') {
                 when { not {branch 'master'} }
                 steps {
                     script {
@@ -86,7 +86,7 @@ pipeline {
                 }
             }
 
-            stage('7.2') {
+            stage('branch - 7.2') {
                 when { not {branch 'master'} }
                 steps {
                     script {
@@ -101,7 +101,7 @@ pipeline {
                 }
             }
 
-            stage('7.2-mysql') {
+            stage('branch - 7.2-mysql') {
                 when { not {branch 'master'} }
                 steps {
                     script {
