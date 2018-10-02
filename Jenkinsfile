@@ -23,6 +23,9 @@ pipeline {
                     }
                 }
             }
+        }
+
+        stage('branch - 5.5-mysql') {
             when { not {branch 'master'} }
             steps {
                 script {
@@ -36,10 +39,6 @@ pipeline {
                 }
             }
         }
-
-       /* stage('branch - 5.5-mysql') {
-           
-        }*/
 
         stage('master - 7.2') {
             when { branch 'master'}
