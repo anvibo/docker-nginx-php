@@ -1,19 +1,6 @@
 pipeline {
     agent any
-    /* post {
-      failure {
-        updateGitlabCommitStatus name: 'build', state: 'failed'
-      }
-      success {
-        updateGitlabCommitStatus name: 'build', state: 'success'
-      }
-    }
-     options {
-      gitLabConnection('gitlab')
-    }
-    triggers {
-        gitlab(triggerOnPush: true, triggerOnMergeRequest: true, branchFilterType: 'All')
-    } */
+   
     stages {
 
         stage('Clone repository') {
@@ -23,11 +10,11 @@ pipeline {
         }
 		
         
-        stage('master - 5.9-mysql') {
+        stage('master - 5.5-mysql') {
             when { branch 'master'}
             steps {
                 script {
-                    def tag = "5.9-mysql"
+                    def tag = "5.5-mysql"
                     app1 = docker.build("anvibo/nginx-php", "-f ${tag}/Dockerfile --pull .")
 
                     withDockerRegistry([url: "", credentialsId: "dockerhub-anvibo"]) {
@@ -36,7 +23,23 @@ pipeline {
                     }
                 }
             }
+            when { not {branch 'master'} }
+            steps {
+                script {
+                    def tag = "5.5-mysql"
+                    app4 = docker.build("anvibo/nginx-php", "-f ${tag}/Dockerfile --pull .")
+
+                    withDockerRegistry([url: "", credentialsId: "dockerhub-anvibo"]) {
+                    app4.push("${tag}-${env.BRANCH_NAME}")
+                    app4.push("${tag}-${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
+                    }
+                }
+            }
         }
+
+       /* stage('branch - 5.5-mysql') {
+           
+        }*/
 
         stage('master - 7.2') {
             when { branch 'master'}
@@ -49,6 +52,21 @@ pipeline {
                     app2.push("${tag}")
                     app2.push("${tag}-${env.BUILD_NUMBER}")
                     app2.push("latest")
+                    }
+                }
+            }
+        }
+
+        stage('branch - 7.2') {
+            when { not {branch 'master'} }
+            steps {
+                script {
+                    def tag = "7.2"
+                    app5 = docker.build("anvibo/nginx-php", "-f ${tag}/Dockerfile --pull .")
+
+                    withDockerRegistry([url: "", credentialsId: "dockerhub-anvibo"]) {
+                    app5.push("${tag}-${env.BRANCH_NAME}")
+                    app5.push("${tag}-${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
                     }
                 }
             }
@@ -68,52 +86,20 @@ pipeline {
                 }
             }
         }
-	
-		
-        
-            stage('branch - 5.9-mysql') {
-                when { not {branch 'master'} }
-                steps {
-                    script {
-                        def tag = "5.9-mysql"
-                        app4 = docker.build("anvibo/nginx-php", "-f ${tag}/Dockerfile --pull .")
 
-                        withDockerRegistry([url: "", credentialsId: "dockerhub-anvibo"]) {
-                        app4.push("${tag}-${env.BRANCH_NAME}")
-                        app4.push("${tag}-${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
-                        }
-                    }
+        stage('branch - 7.2-mysql') {
+            when { not {branch 'master'} }
+            steps {
+                script {
+                def tag = "7.2-mysql"
+                app6 = docker.build("anvibo/nginx-php", "-f ${tag}/Dockerfile --pull .")
+
+                withDockerRegistry([url: "", credentialsId: "dockerhub-anvibo"]) {
+                app6.push("${tag}-${env.BRANCH_NAME}")
+                app6.push("${tag}-${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
                 }
-            }
-
-            stage('branch - 7.2') {
-                when { not {branch 'master'} }
-                steps {
-                    script {
-                        def tag = "7.2"
-                        app5 = docker.build("anvibo/nginx-php", "-f ${tag}/Dockerfile --pull .")
-
-                        withDockerRegistry([url: "", credentialsId: "dockerhub-anvibo"]) {
-                        app5.push("${tag}-${env.BRANCH_NAME}")
-                        app5.push("${tag}-${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
-                        }
-                    }
-                }
-            }
-
-            stage('branch - 7.2-mysql') {
-                when { not {branch 'master'} }
-                steps {
-                    script {
-                    def tag = "7.2-mysql"
-                    app6 = docker.build("anvibo/nginx-php", "-f ${tag}/Dockerfile --pull .")
-
-                    withDockerRegistry([url: "", credentialsId: "dockerhub-anvibo"]) {
-                    app6.push("${tag}-${env.BRANCH_NAME}")
-                    app6.push("${tag}-${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
-                    }
-                    }
                 }
             }
         }
-	}
+    }
+}
