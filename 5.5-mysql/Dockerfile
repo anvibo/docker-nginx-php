@@ -11,7 +11,7 @@ ADD default5.5.conf /etc/nginx/sites-available/default
 
 RUN sed -i 's/^\(\[supervisord\]\)$/\1\nnodaemon=true/' /etc/supervisor/supervisord.conf
 
-RUN echo "short_open_tag = On" >> /etc/php5/fpm/pool.d/www.conf
+RUN sed -i 's/^short_open_tag.*/short_open_tag = On/' /etc/php5/fpm/php.ini || echo "short_open_tag = On" >> /etc/php5/fpm/php.ini
 
 ADD info.php /app/
 
