@@ -1,0 +1,103 @@
+version: 2.1
+executors:
+  docker-publisher:
+    environment:
+      IMAGE_NAME: anvibo/nginx-php
+    docker:
+      - image: docker
+jobs:
+  build:
+    executor: docker-publisher
+    working_directory: ~/nginx-php/5.5-mysql
+    steps:
+      - checkout:
+          path: ~/nginx-php
+      - setup_remote_docker
+      - run:
+          name: copy nginx.conf
+          command: cp ../nginx.conf .
+      - run:
+          name: copy php-fpm5.5.conf
+          command: cp ../php-fpm5.5.conf .
+      - run:
+          name: copy default5.5.conf
+          command: cp ../default5.5.conf .
+      - run:
+          name: copy info.php
+          command: cp ../info.php .
+      - run:
+          name: build docker image
+          command: docker build -t $IMAGE_NAME:latest .
+      - run:
+          name: Archive Docker image
+          command: docker save -o image.tar $IMAGE_NAME
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./image.tar
+  publish-latest:
+    executor: docker-publisher
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - setup_remote_docker
+      - run:
+          name: Load archived Docker image
+          command: docker load -i /tmp/workspace/image.tar
+      - run:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
+            IMAGE_TAG="5.5-mysql-r${CIRCLE_BUILD_NUM}"
+            docker tag $IMAGE_NAME:latest $IMAGE_NAME:$IMAGE_TAG
+            docker push $IMAGE_NAME:$IMAGE_TAG
+  publish-tag:
+        executor: docker-publisher
+        steps:
+          - attach_workspace:
+              at: /tmp/workspace
+          - setup_remote_docker
+          - run:
+              name: Load archived Docker image
+              command: docker load -i /tmp/workspace/image.tar
+          - run:
+              name: Publish Docker Image to Docker Hub
+              command: |
+                echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
+                IMAGE_TAG="18.04-${CIRCLE_TAG/v/''}"
+                docker tag $IMAGE_NAME:latest $IMAGE_NAME:$IMAGE_TAG
+                docker push $IMAGE_NAME:latest
+                docker push $IMAGE_NAME:$IMAGE_TAG
+workflows:
+  version: 2
+  build-master:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: master
+      - publish-latest:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
+  build-tags:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
+      - publish-tag:
+          requires:
+            - build
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
+
+
+        
